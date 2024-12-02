@@ -2,7 +2,8 @@ import {expect} from 'chai';
 import {describe, it} from 'mocha';
 import {GameRunner} from '../src/game-runner';
 import { Game } from '../src/game';
-import sinon from 'sinon';
+
+import sinon, { spy } from 'sinon';
 
 describe('The test environment', () => {
     it('should pass', () => {
@@ -13,18 +14,45 @@ describe('The test environment', () => {
         expect(GameRunner).to.not.be.undefined;
     });
 
-    it("game.add should add new player", function () {
+    it("game.add should add new player1s", function () {
         const game = new Game();
-        const player = "Peter";
+        const player1 = "Peter";
+        const player2 = "Andy";
 
-        const consoleSpy = sinon.spy(console, 'log');
+        let playerLength = 1;
+
+        const consoleSpy = spy(console, 'log');
         
-        game.add('Peter')
+        game.add(player1)
 
-        expect(consoleSpy.calledOnce).to.be.true;
-        expect(consoleSpy.calledWith('Player Peter was added')).to.be.true;
+        expect(consoleSpy.calledWith(`${player1} was added`)).to.be.true;
+        expect(consoleSpy.calledWith(`They are player number ${playerLength}`)).to.be.true;
+
+        game.add(player2)
+        playerLength++;
+
+
+        expect(consoleSpy.calledWith(`${player2} was added`)).to.be.true;
+        expect(consoleSpy.calledWith(`They are player number ${playerLength}`)).to.be.true;
 
         consoleSpy.restore();
     });
 
+    it("game.add should add new player1s", function () {
+        const game = new Game();
+        const player1 = "Peter";
+        const player2 = "Andy";
+
+        let currentPlayer = player1;
+
+        const consoleSpy = spy(console, 'log');
+        game.add(player1)
+        game.add(player2)
+
+        game.roll(1);
+        expect(consoleSpy.calledWith(`${currentPlayer} is the current player`)).to.be.true;
+
+
+        consoleSpy.restore();
+    });
 });
