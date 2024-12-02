@@ -30,18 +30,18 @@ afterEach(()=>{
   });
 
 
-  it("add player approval", function () {
+  it("add one player approval", function () {
     inTest = true
     const game = new Game();
     game.add("Player")
     this.verify(JSON.stringify(logs))
     });
-
-    it("add multiple player approval", function () {
+    
+  it("add multiple player approval", function () {
         inTest = true
         const game = new Game();
         const players = [
-          "player1","player2","player3","player4","player5","player6","player7",
+          "player1","player2","player3","player4","player5","player6","player7","player8",
         ]
         players.forEach(p => game.add(p));
         this.verify(JSON.stringify(logs))

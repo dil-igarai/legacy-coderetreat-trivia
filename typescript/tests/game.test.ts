@@ -99,6 +99,28 @@ describe('The test environment', () => {
     //     consoleSpy.restore();
     // });
 
+    // it("game.wasCorrectlyAnswered should log \'answer was correct!'\ text on correct player answer", function () {
+
+    //     const consoleSpy = spy(console, 'log');
+
+
+    //     consoleSpy.restore();
+    // });
+
+    // it("game.wasCorrectlyAnswered should log text \'<player name>'s answer was correct!'\ with player name on good answer", function () {
+    //     const game = new Game();
+    //     const currentPlayer = "Peter";
+
+
+    //     game.wasCorrectlyAnswered();
+    //     const consoleSpy = spy(console, 'log');
+
+    //     expect(consoleSpy.calledWith(`${currentPlayer}'s answer was correct!`)).to.be.true;
+
+
+    //     consoleSpy.restore();
+    // });
+
     it("game.roll should calculate the first player's new position right", function () {
         const game = new Game();
         const player1 = "Peter";
@@ -110,7 +132,25 @@ describe('The test environment', () => {
 
         const rolled = 1;
         game.roll(rolled);
-        expect(consoleSpy.calledWith(`${currentPlayer}'s new location is NaN`)).to.be.true;
+
+        expect(consoleSpy.calledWith(`${currentPlayer}'s new location is 1`)).to.be.true;
+
+        consoleSpy.restore();
+    });
+
+    it("game.roll should calculate the first player's new position right", function () {
+        const game = new Game();
+        const player1 = "Peter";
+
+        let currentPlayer = player1;
+
+        const consoleSpy = spy(console, 'log');
+        game.add(player1)
+
+        const rolled = 1;
+        game.roll(rolled);
+
+        expect(consoleSpy.calledWith(`${currentPlayer}'s new location is 1`)).to.be.true;
 
         consoleSpy.restore();
     });
