@@ -1,4 +1,4 @@
-import { consoleMessages } from "../const/translation/translation";
+import { consoleMessages } from "../const/translation";
 
 export class Game {
     private players: Array<string> = [];
@@ -15,10 +15,10 @@ export class Game {
     private rockQuestions: Array<string> = [];
 
 
+
     
     constructor(language = 'en') {
         this.t = consoleMessages[language];
-
 
         for (let i = 0; i < 50; i++) {
             this.popQuestions.push(this.t.popQuestions(i));
@@ -37,8 +37,8 @@ export class Game {
     public add(name: string): boolean {
         this.players.push(name);
         this.places[this.howManyPlayers() - 1]  = 0;
-        this.purses[this.howManyPlayers()] = 0;
-        this.inPenaltyBox[this.howManyPlayers()] = false;
+        this.purses[this.howManyPlayers() - 1] = 0;
+        this.inPenaltyBox[this.howManyPlayers() - 1] = false;
 
         console.log(this.t.playerAdded(name));
         console.log(this.t.playerNumber(this.players.length));
@@ -50,36 +50,65 @@ export class Game {
         return this.players.length;
     }
 
+    public getPlayers(): Array<string> {
+        return this.players;
+    }
+
+    private getCurrentPlayerName(): string {
+        return this.players[this.currentPlayer];
+    }
+
+    private getCurrentPlayerPlace(): number {
+        return this.places[this.currentPlayer];
+    }
+
+    private getCurrentPlayerPurses(): number {
+        return this.purses[this.currentPlayer];
+    }
+
+    private increaseCurrentPlayerPlace(rolled: number): void {
+        const newPlace = this.getCurrentPlayerPlace() + rolled;
+
+        if (newPlace > 11) {
+            this.places[this.currentPlayer] = newPlace - 12;
+        } else {
+            this.places[this.currentPlayer] = newPlace;
+        }
+    }
+
+    private increaseCurrentPlayerPurses(): void {
+        this.purses[this.currentPlayer] += 1;
+    }
+
     public roll(roll: number) {
-        console.log(this.t.currentPlayer(this.players[this.currentPlayer]));
+        const currentPlayerName = this.getCurrentPlayerName();
+        const getCurrentPlayerPlace = this.getCurrentPlayerPlace();
+
+        console.log(this.t.currentPlayer(currentPlayerName));
         console.log(this.t.rolled(roll));
     
+
         if (this.inPenaltyBox[this.currentPlayer]) {
+        
           if (roll % 2 != 0) {
             this.isGettingOutOfPenaltyBox = true;
     
-            console.log(this.t.isGettingOutOfPenaltyBox(this.players[this.currentPlayer]));
-            this.places[this.currentPlayer] = this.places[this.currentPlayer] + roll;
-            if (this.places[this.currentPlayer] > 11) {
-              this.places[this.currentPlayer] = this.places[this.currentPlayer] - 12;
-            }
+            console.log(this.t.isGettingOutOfPenaltyBox(currentPlayerName));
+
+            this.increaseCurrentPlayerPlace(roll)
     
-            console.log(this.t.newLocation(this.players[this.currentPlayer], this.places[this.currentPlayer]));
+            console.log(this.t.newLocation(currentPlayerName, getCurrentPlayerPlace));
             console.log(this.t.category(this.currentCategory()));
+
             this.askQuestion();
           } else {
-            console.log(this.t.isGettingOutOfPenaltyBox(this.players[this.currentPlayer]));
+            console.log(this.t.isGettingOutOfPenaltyBox(currentPlayerName));
             this.isGettingOutOfPenaltyBox = false;
           }
         } else {
+        this.increaseCurrentPlayerPlace(roll);
             
-            this.places[this.currentPlayer] = this.places[this.currentPlayer] + roll;
-            if (this.places[this.currentPlayer] > 11) {
-                this.places[this.currentPlayer] = this.places[this.currentPlayer] - 12;
-            }
-
-            
-          console.log(this.t.newLocation(this.players[this.currentPlayer], this.places[this.currentPlayer]));
+          console.log(this.t.newLocation(currentPlayerName, getCurrentPlayerPlace));
           console.log(this.t.category(this.currentCategory())); 
           this.askQuestion();
         }
@@ -125,20 +154,26 @@ export class Game {
     public wrongAnswer(): boolean {
         console.log(this.t.wrongAnswer());
         console.log(this.t.playerSentToPenaltyBox(this.players[this.currentPlayer]));
+
         this.inPenaltyBox[this.currentPlayer] = true;
     
         this.currentPlayer += 1;
+
         if (this.currentPlayer == this.players.length)
             this.currentPlayer = 0;
+
         return true;
     }
 
     public wasCorrectlyAnswered(): boolean {
+        const currentPlayerName = this.getCurrentPlayerName();
+        const currentPlayerPurses = this.getCurrentPlayerPurses();
+
         if (this.inPenaltyBox[this.currentPlayer]) {
             if (this.isGettingOutOfPenaltyBox) {
-              console.log(this.t.correctAnswerthis.players[this.currentPlayer]);
-              this.purses[this.currentPlayer] += 1;
-              console.log(this.t.playerGoldCoins(this.players[this.currentPlayer], this.purses[this.currentPlayer]));
+              console.log(this.t.correctAnswer(currentPlayerName));
+              this.increaseCurrentPlayerPurses();
+              console.log(this.t.playerGoldCoins(currentPlayerName, currentPlayerPurses));
       
               var winner = this.didPlayerWin();
               this.currentPlayer += 1;
@@ -152,14 +187,10 @@ export class Game {
                 this.currentPlayer = 0;
               return true;
             }
-      
-      
           } else {
-      
-            console.log(this.t.correctAnswer(this.players[this.currentPlayer]));
-      
-            this.purses[this.currentPlayer] += 1;
-            console.log(this.t.playerGoldCoins(this.players[this.currentPlayer], this.purses[this.currentPlayer]));
+            console.log(this.t.correctAnswer(currentPlayerName));
+            this.increaseCurrentPlayerPurses();
+            console.log(this.t.playerGoldCoins(currentPlayerName, currentPlayerPurses));
 
       
             var winner = this.didPlayerWin();
@@ -171,5 +202,4 @@ export class Game {
             return winner;
           }
     }
-
 }
