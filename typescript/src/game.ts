@@ -12,8 +12,9 @@ export class Game {
     private sportsQuestions: Array<string> = [];
     private rockQuestions: Array<string> = [];
 
+    
     constructor() {
-
+        console.log('CONSTR', this.places)
         for (let i = 0; i < 50; i++) {
             this.popQuestions.push("Pop Question " + i);
             this.scienceQuestions.push("Science Question " + i);
@@ -27,11 +28,14 @@ export class Game {
     }
 
     public add(name: string): boolean {
+
         this.players.push(name);
         this.places[this.howManyPlayers()] = 0;
         this.purses[this.howManyPlayers()] = 0;
         this.inPenaltyBox[this.howManyPlayers()] = false;
 
+        // console.log('PLACES', this.places)
+        //console.log('PLACES_PLAYERS', this.howManyPlayers())
         console.log(name + " was added");
         console.log("They are player number " + this.players.length);
 
@@ -57,6 +61,8 @@ export class Game {
             }
     
             console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
+            console.log(`AAAAAAAA - ${this.places}`)
+            console.log(`BBBBBBBB - ${this.currentPlayer}`)
             console.log("The category is " + this.currentCategory());
             this.askQuestion();
           } else {
