@@ -38,7 +38,7 @@ describe('The test environment', () => {
         consoleSpy.restore();
     });
 
-    it("game.add should add new player1s", function () {
+    it("game.roll should get the current player right", function () {
         const game = new Game();
         const player1 = "Peter";
         const player2 = "Andy";
@@ -49,9 +49,51 @@ describe('The test environment', () => {
         game.add(player1)
         game.add(player2)
 
-        game.roll(1);
+        const rolled = 1;
+        game.roll(rolled);
         expect(consoleSpy.calledWith(`${currentPlayer} is the current player`)).to.be.true;
+        expect(consoleSpy.calledWith(`They have rolled a ${rolled}`)).to.be.true;
 
+        consoleSpy.restore();
+    });
+
+/*     const rollCases = [
+        { rolled: 1, expected: 1 },
+        { rolled: 2, expected: 2 },
+        { rolled: 3, expected: 3 },
+        { rolled: 4, expected: 4 },
+        { rolled: 5, expected: 5 },
+        { rolled: 16, expected: 4 },
+    ];
+
+    rollCases.forEach(({ rolled, expected }) => {
+        it(`game.roll should calculate the new position right for ${rolled}`, function () {
+            const game = new Game();
+            const player1 = "Peter";
+
+            let currentPlayer = player1;
+
+            const consoleSpy = spy(console, 'log');
+            game.add(player1);
+
+            game.roll(rolled);
+            expect(consoleSpy.calledWith(`${currentPlayer}'s new location is ${expected}`)).to.be.true;
+
+            consoleSpy.restore();
+        });
+    }); */
+    it("game.roll should calculate the new position right", function () {
+        const game = new Game();
+        const player1 = "Peter";
+
+        let currentPlayer = player1;
+
+        const consoleSpy = spy(console, 'log');
+        game.add(player1)
+
+        const rolled = 1;
+        game.roll(rolled);
+        expect(consoleSpy.calledWith(`${currentPlayer}'s new location is ${rolled}`)).to.be.true;
 
         consoleSpy.restore();
     });

@@ -61,8 +61,6 @@ export class Game {
             }
     
             console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
-            console.log(`AAAAAAAA - ${this.places}`)
-            console.log(`BBBBBBBB - ${this.currentPlayer}`)
             console.log("The category is " + this.currentCategory());
             this.askQuestion();
           } else {
